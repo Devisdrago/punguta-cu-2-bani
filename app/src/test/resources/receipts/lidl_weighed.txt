@@ -1,0 +1,17 @@
+Lidl Romania S.C.S.
+Str. Lujerului nr. 7
+Cod fiscal RO22891860
+                          LEI
+Lapte Pilos 3,5%           5,99 B
+Banane
+  1,234 kg x 6,49 LEI/kg   8,01 B
+Iaurt grecesc 2 x 4,29     8,58 B
+Lidl Plus reducere        -1,00
+Bere Pilsner 0,5L          3,29 A
+Total                     24,87
+Card                      24,87
+TVA       %       Net     TVA    Brut
+A        19,00    2,76    0,53   3,29
+B         9,00   19,82    1,76  21,58
+Total            22,58    2,29  24,87
+02.11.26 18:22   1234 5 6789 0123

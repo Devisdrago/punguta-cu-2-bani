@@ -1,0 +1,15 @@
+PR0FI R0M FOOD SRL
+TIMISOARA
+C1F R02000000
+BON FlSCAL
+PAINE ALBA                 2,5O B
+LAPTE  1L                  6, 49 B
+3 BUC x 1,2O
+OUA M                      3,6O B
+C4SCAVAL DALIA 300G       I8,99 B
+SUBT0TAL                  31,58
+T0TAL LEI                 31,58
+NUMERAR                   35,OO
+REST                       3,42
+TVA B 9,00%                2,61
+DATA 3O.1O.2026  ORA 19:01

@@ -1,0 +1,11 @@
+CARREFOUR ROMANIA SA
+HIPERMARKET BANEASA
+CIF: RO11588780
+ULEI FLORIA 1L                  9,99 B
+ZAHAR 1KG                       5,49 B
+CAFEA JACOBS 250G              24,99 B
+SUBTOTAL                       40,47
+REDUCERE CARD CLIENT           -4,05
+TOTAL                          36,42
+CARD                           36,42
+02/11/2026 12:00:01

@@ -1,0 +1,10 @@
+OMV PETROM MARKETING SRL
+STATIA PETROM PIPERA
+CIF RO 1590082
+MOTORINA STANDARD
+32,150 L x 7,49 LEI/L          240,80 A
+CAFEA ESPRESSO                   8,00 B
+TOTAL                          248,80
+CARD                           248,80
+TVA A 21%                      41,79
+DATA 01.11.2026

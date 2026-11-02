@@ -1,0 +1,14 @@
+FARMACIA CATENA
+S.C. HYGEIA S.R.L.
+Str. Ştefan cel Mare nr. 10
+COD IDENTIFICARE FISCALĂ: RO 1234567
+NUROFEN FORTE 400MG 12CPR       21,50 C
+VITAMINA C 1000MG 20CPR         18,30 C
+PLASTURI 20 BUC                  9,90 A
+SERVEŢELE UMEDE                  6,40 A
+TOTAL                           56,10
+NUMERAR                        100,00
+REST                            43,90
+TVA A 21%  2,85
+TVA C 11%  3,83
+02-11-2026 09:14

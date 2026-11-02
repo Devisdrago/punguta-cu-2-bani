@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:locale="ro">
+    <string name="app_name">Punguța cu 2 bani</string>
+
+    <!-- General -->
+    <string name="ok">OK</string>
+    <string name="cancel">Anulează</string>
+    <string name="save">Salvează</string>
+    <string name="delete">Șterge</string>
+    <string name="rename">Redenumește</string>
+    <string name="back">Înapoi</string>
+    <string name="name">Nume</string>
+    <string name="category">Categorie</string>
+    <string name="pick_date">Alege data</string>
+    <string name="error_title">A apărut o problemă</string>
+    <string name="move_and_delete">Mută și șterge</string>
+
+    <!-- Navigation -->
+    <string name="tab_dashboard">Panou</string>
+    <string name="tab_incomes">Venituri</string>
+    <string name="tab_expenses">Cheltuieli</string>
+    <string name="tab_settings">Setări</string>
+
+    <!-- Month switcher -->
+    <string name="month_previous">Luna anterioară</string>
+    <string name="month_next">Luna următoare</string>
+    <string name="month_current">Mergi la luna curentă</string>
+
+    <!-- Categories -->
+    <string name="categories">Categorii</string>
+    <string name="categories_hint">Adaugă, redenumește sau șterge categorii</string>
+    <string name="category_add">Categorie nouă</string>
+    <string name="category_delete_title">Ștergi „%1$s”?</string>
+    <string name="category_delete_unused">Categoria nu este folosită. Poate fi ștearsă în siguranță.</string>
+    <plurals name="category_in_use">
+        <item quantity="one">Categoria este folosită de %d element. Alege unde îl muți:</item>
+        <item quantity="few">Categoria este folosită de %d elemente. Alege unde le muți:</item>
+        <item quantity="other">Categoria este folosită de %d de elemente. Alege unde le muți:</item>
+    </plurals>
+    <string name="category_deleted">Categoria a fost ștearsă.</string>
+    <string name="category_pick_target">Alege categoria în care muți elementele.</string>
+    <string name="category_cannot_delete_last">Trebuie să rămână cel puțin o categorie.</string>
+    <string name="error_name_empty">Introdu un nume.</string>
+    <string name="error_name_too_long">Numele este prea lung (maximum 40 de caractere).</string>
+    <string name="error_name_duplicate">Există deja o categorie cu acest nume.</string>
+
+    <!-- Common fields -->
+    <string name="amount">Sumă</string>
+    <string name="amount_monthly">Sumă lunară</string>
+    <string name="date">Data</string>
+    <string name="note_optional">Notă (opțional)</string>
+    <string name="total">Total</string>
+    <string name="recurring">Recurent</string>
+    <string name="discard">Renunță</string>
+    <string name="delete_cannot_undo">Acțiunea nu poate fi anulată.</string>
+    <string name="error_amount">Introdu o sumă validă, de exemplu 12,50.</string>
+    <string name="error_day">Alege o zi între 1 și 31.</string>
+
+    <!-- Incomes -->
+    <string name="income_add">Venit nou</string>
+    <string name="income_edit">Editează venitul</string>
+    <string name="income_name">Denumire (ex. Salariu)</string>
+    <string name="income_delete_title">Ștergi venitul?</string>
+    <string name="income_generated_hint">Acest venit a fost adăugat automat dintr-un venit recurent. Modificările afectează doar această lună.</string>
+    <string name="incomes_empty_title">Niciun venit în această lună</string>
+    <string name="incomes_empty_message">Adaugă un venit sau configurează un venit recurent, cum ar fi salariul.</string>
+    <string name="recurring_incomes">Venituri recurente</string>
+
+    <!-- Recurring templates -->
+    <string name="recurring_expenses">Cheltuieli recurente</string>
+    <string name="template_add">Adaugă</string>
+    <string name="template_new_income">Venit recurent nou</string>
+    <string name="template_new_expense">Cheltuială recurentă nouă</string>
+    <string name="template_edit">Editează recurența</string>
+    <string name="template_explainer">Se adaugă automat în fiecare lună, în ziua aleasă. Dacă luna are mai puține zile, se folosește ultima zi a lunii.</string>
+    <string name="templates_empty_title">Nimic recurent încă</string>
+    <string name="templates_empty_income">Adaugă salariul sau alte venituri lunare.</string>
+    <string name="templates_empty_expense">Adaugă chiria, utilitățile sau abonamentele.</string>
+    <string name="template_day">Ziua %1$d</string>
+    <string name="template_next">următoarea: %1$s</string>
+    <string name="template_stopped">oprit</string>
+    <string name="template_day_label">Ziua din lună</string>
+    <string name="template_day_hint">Între 1 și 31. Ex.: 31 înseamnă ultima zi a lunii.</string>
+    <string name="template_start">Începe de la</string>
+    <string name="template_name_hint_income">ex. Salariu</string>
+    <string name="template_name_hint_expense">ex. Chirie, Netflix</string>
+    <string name="template_edit_hint">Modificările se aplică doar lunilor viitoare. Intrările deja adăugate rămân neschimbate.</string>
+    <string name="template_stop">Oprește</string>
+    <string name="template_stop_message">Nu se vor mai adăuga intrări noi. Intrările deja adăugate rămân.</string>
+    <string name="template_resume">Reia</string>
+    <string name="template_delete_title">Ștergi recurența?</string>
+    <string name="template_delete_message">Intrările deja adăugate rămân în istoric. Nu se vor mai adăuga altele.</string>
+
+    <!-- Expenses -->
+    <string name="expense_add">Cheltuială nouă</string>
+    <string name="expense_edit">Editează cheltuiala</string>
+    <string name="expense_delete_title">Ștergi cheltuiala?</string>
+    <string name="expenses_empty_title">Nicio cheltuială în această lună</string>
+    <string name="expenses_empty_message">Scanează un bon sau adaugă o cheltuială manual.</string>
+    <string name="receipt_scan">Scanează bon</string>
+    <string name="receipt_review">Verifică bonul</string>
+    <string name="merchant">Magazin</string>
+    <string name="description">Descriere</string>
+    <string name="receipt_total">Total pe bon</string>
+    <string name="items_title">Articole (%1$d)</string>
+    <string name="items_total">Total articole</string>
+    <string name="item_add">Adaugă articol</string>
+    <string name="item_remove">Elimină articolul</string>
+    <string name="item_name">Articol</string>
+    <string name="item_details">Cantitate, preț, reducere</string>
+    <string name="quantity">Cantitate</string>
+    <string name="unit_price">Preț unitar</string>
+    <string name="discount">Reducere</string>
+    <plurals name="item_count">
+        <item quantity="one">%d articol</item>
+        <item quantity="few">%d articole</item>
+        <item quantity="other">%d de articole</item>
+    </plurals>
+    <string name="total_matches">Suma articolelor corespunde cu totalul bonului.</string>
+    <string name="total_mismatch_short">Diferență față de bon: %1$s</string>
+    <string name="total_mismatch_title">Totalurile nu se potrivesc</string>
+    <string name="total_mismatch_message">Suma articolelor este %1$s, dar totalul de pe bon este %2$s (diferență %3$s). Verifică articolele sau salvează oricum.</string>
+    <string name="save_anyway">Salvează oricum</string>
+    <string name="receipt_uncertain_banner">Câmpurile evidențiate au fost citite cu incertitudine. Verifică-le înainte de salvare.</string>
+    <string name="receipt_discard_title">Renunți la bon?</string>
+    <string name="receipt_discard_message">Datele citite de pe bon nu vor fi salvate, iar copia fotografiei din aplicație va fi ștearsă.</string>
+    <string name="error_title_empty">Introdu o descriere sau numele magazinului.</string>
+    <string name="error_no_items">Adaugă cel puțin un articol.</string>
+    <string name="error_item_name">Fiecare articol are nevoie de un nume.</string>
+    <string name="error_item_amount">Verifică sumele marcate cu roșu.</string>
+    <string name="error_item_category">Alege o categorie pentru fiecare articol.</string>
+    <string name="error_total_zero">Totalul trebuie să fie mai mare decât zero.</string>
+
+    <!-- Dashboard -->
+    <string name="dash_balance">Sold rămas</string>
+    <string name="dash_income">Venituri</string>
+    <string name="dash_spending">Cheltuieli</string>
+    <string name="dash_savings_rate">Rata de economisire</string>
+    <string name="dash_savings_na">— (fără venituri)</string>
+    <string name="dash_vs_previous">față de luna trecută</string>
+    <string name="dash_by_category">Cheltuieli pe categorii</string>
+    <string name="dash_trend">Evoluție în ultimele 6 luni</string>
+    <string name="dash_changes">Schimbări față de luna trecută</string>
+    <string name="dash_change_detail">%1$s → %2$s</string>
+    <string name="dash_empty_title">Nimic înregistrat încă</string>
+    <string name="dash_empty_message">Adaugă venituri și cheltuieli pentru a vedea situația lunii.</string>
+    <string name="dash_error">Datele nu au putut fi încărcate. Încearcă din nou.</string>
+    <string name="category_month_empty">Nicio cheltuială în această categorie luna aceasta.</string>
+
+    <!-- Budgets -->
+    <string name="budgets">Bugete lunare</string>
+    <string name="budgets_hint">Limite de cheltuieli pe categorii</string>
+    <string name="budgets_none">Niciun buget setat. Apasă „Gestionează” pentru a seta limite pe categorii.</string>
+    <string name="budgets_explainer">Limita se aplică în fiecare lună. Primești avertisment la 80% și când depășești limita.</string>
+    <string name="manage">Gestionează</string>
+    <string name="budget_unset">fără limită</string>
+    <string name="budget_for">Buget pentru %1$s</string>
+    <string name="budget_monthly_limit">Limită lunară</string>
+    <string name="budget_empty_removes">Lasă gol pentru a elimina limita.</string>
+    <string name="budget_warning">Atenție: ai folosit peste 80%%. Mai ai %1$s.</string>
+    <string name="budget_exceeded">Buget depășit cu %1$s!</string>
+
+    <!-- Receipt scanning -->
+    <string name="scan_gallery">Din galerie</string>
+    <string name="scan_capture">Fotografiază bonul</string>
+    <string name="scan_torch">Lanternă</string>
+    <string name="scan_tip">Așază bonul pe o suprafață plană, bine luminat, și încadrează-l complet.</string>
+    <string name="scan_processing">Se citește bonul…</string>
+    <string name="scan_processing_hint">Totul se procesează pe telefon, fără internet.</string>
+    <string name="scan_retry">Fă altă poză</string>
+    <string name="scan_manual">Completează manual</string>
+    <string name="scan_no_camera">Telefonul nu are o cameră disponibilă. Poți alege o poză din galerie.</string>
+    <string name="scan_permission_explainer">Pentru a fotografia bonul, aplicația are nevoie de acces la cameră. Pozele rămân doar pe telefon. Poți alege și o poză existentă din galerie.</string>
+    <string name="scan_allow_camera">Permite accesul la cameră</string>
+    <string name="scan_open_settings">Deschide setările aplicației</string>
+    <string name="scan_error_capture">Fotografia nu a putut fi făcută. Încearcă din nou.</string>
+    <string name="scan_error_image">Imaginea nu a putut fi deschisă. Alege altă poză.</string>
+    <string name="scan_error_no_text">Nu am găsit text pe imagine. Încearcă o poză mai clară, cu lumină mai bună.</string>
+    <string name="scan_error_ocr">Recunoașterea textului a eșuat. Încearcă din nou sau completează manual.</string>
+    <string name="receipt_unused_lines">Rânduri neinterpretate (%1$d)</string>
+    <string name="warn_no_items">Nu am recunoscut niciun articol. Adaugă-le manual.</string>
+    <string name="warn_no_total">Nu am găsit totalul bonului. Introdu-l pentru verificare.</string>
+    <string name="warn_total_from_payment">Totalul a fost luat din suma plătită cu cardul. Verifică-l.</string>
+    <string name="warn_no_date">Nu am găsit data bonului. Am pus data de azi.</string>
+    <string name="warn_orphan_discount">O reducere nu a putut fi atribuită unui articol.</string>
+    <string name="warn_discount_spread">Reducerea de pe bon a fost împărțită proporțional între articole.</string>
+
+    <!-- Security -->
+    <string name="security">Securitate</string>
+    <string name="lock_setting">Blocare cu amprentă</string>
+    <string name="lock_setting_hint">Cere amprenta (sau PIN-ul/modelul telefonului) la deschiderea aplicației și după ce a stat în fundal.</string>
+    <string name="lock_not_set_up">Telefonul nu are setat un PIN, model sau amprentă. Setează unul pentru a putea bloca aplicația.</string>
+    <string name="lock_unsupported">Blocarea nu este disponibilă pe acest telefon.</string>
+    <string name="lock_open_security_settings">Deschide setările de securitate</string>
+    <string name="lock_enable_prompt">Activează blocarea</string>
+    <string name="lock_prompt_title">Deblochează Punguța</string>
+    <string name="lock_prompt_subtitle">Folosește amprenta sau PIN-ul telefonului</string>
+    <string name="lock_locked">Aplicația este blocată.</string>
+    <string name="lock_unlock">Deblochează</string>
+    <string name="lock_error_lockout">Prea multe încercări. Așteaptă puțin și încearcă din nou.</string>
+    <string name="lock_error_generic">Autentificarea nu a reușit. Încearcă din nou.</string>
+    <string name="lock_unavailable">Telefonul nu mai are un PIN, model sau amprentă setată, deci aplicația nu poate fi deblocată în siguranță. Setează o blocare a ecranului sau dezactivează blocarea aplicației.</string>
+    <string name="lock_disable_continue">Dezactivează blocarea și continuă</string>
+
+    <!-- Backup -->
+    <string name="backup">Copie de siguranță</string>
+    <string name="backup_warning_title">Datele există doar pe acest telefon</string>
+    <string name="backup_warning_body">Nu există sincronizare în cloud. Dacă pierzi sau resetezi telefonul fără un export, datele se pierd. Fișierul de backup NU este criptat: oricine îl deschide îți poate vedea veniturile și cheltuielile. Păstrează-l într-un loc sigur.</string>
+    <string name="backup_last_export">Ultimul export: %1$s</string>
+    <string name="backup_never_exported">Nu ai făcut niciun export până acum.</string>
+    <string name="backup_export">Exportă datele</string>
+    <string name="backup_export_hint">Salvează toate datele și setările într-un fișier JSON</string>
+    <string name="backup_restore">Restaurează din backup</string>
+    <string name="backup_restore_hint">Înlocuiește datele actuale cu cele dintr-un fișier</string>
+    <string name="backup_export_done">Exportul a fost salvat.</string>
+    <string name="backup_export_failed">Fișierul nu a putut fi scris. Încearcă altă locație.</string>
+    <string name="backup_read_failed">Fișierul nu a putut fi citit.</string>
+    <string name="backup_not_a_backup">Fișierul ales nu este un backup Punguța cu 2 bani.</string>
+    <string name="backup_newer_version">Backup-ul a fost creat cu o versiune mai nouă a aplicației. Actualizează aplicația și încearcă din nou.</string>
+    <string name="backup_invalid_data">Backup-ul este deteriorat sau incomplet. Nu s-a modificat nimic.</string>
+    <string name="backup_confirm_title">Înlocuiești toate datele?</string>
+    <string name="backup_confirm_message">Backup din %1$s\nVenituri: %2$d · Cheltuieli: %3$d · Recurențe: %4$d · Categorii: %5$d\n\nTOATE datele actuale de pe telefon vor fi șterse și înlocuite cu cele din backup. Acțiunea nu poate fi anulată. Dacă nu ești sigur, exportă mai întâi datele actuale.</string>
+    <string name="backup_confirm_replace">Înlocuiește</string>
+    <string name="backup_restore_done">Datele au fost restaurate.</string>
+    <string name="backup_restore_failed">Restaurarea a eșuat. Datele existente au rămas neschimbate.</string>
+</resources>

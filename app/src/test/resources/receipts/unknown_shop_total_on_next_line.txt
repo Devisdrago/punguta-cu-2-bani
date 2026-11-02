@@ -1,0 +1,11 @@
+S.C. ALIMENTARA LA COLT S.R.L.
+Loc. Cluj-Napoca, Str. Florilor 5
+CUI 12345678
+Pâine de casă                    4,50 A
+Brânză de vaci 500g             12,90 A
+Smântână 20%                     6,80 A
+TOTAL
+                                24,20
+NUMERAR                         30,00
+REST                             5,80
+DATA 31.10.2026
