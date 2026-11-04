@@ -66,7 +66,6 @@ fun DashboardScreen(
     onCategory: (Long) -> Unit,
     onBudgets: () -> Unit,
     onAddExpense: () -> Unit,
-    onScan: () -> Unit,
     onExpense: (Long) -> Unit,
     vm: DashboardViewModel = viewModel(factory = DashboardViewModel.factory(monthVm.month)),
 ) {
@@ -92,11 +91,6 @@ fun DashboardScreen(
                 is DashboardState.Ready -> {
                     Balance(s.data)
                     SavingsRate(s.data)
-                    PillButton(
-                        stringResource(R.string.receipt_scan),
-                        onScan,
-                        icon = Icons.Outlined.DocumentScanner,
-                    )
                     SpendingCalendar(s.data.calendar, onExpense)
                     if (s.data.isEmpty) {
                         AppCard {

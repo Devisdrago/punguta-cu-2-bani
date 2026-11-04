@@ -9,6 +9,9 @@ import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onFirst
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performTouchInput
+import androidx.compose.ui.test.swipeLeft
+import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performTextInput
 import androidx.work.Configuration
@@ -18,6 +21,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
+import org.robolectric.annotation.GraphicsMode
 import ro.punguta.app.MainActivity
 import ro.punguta.app.PungutaApp
 
@@ -34,7 +38,8 @@ class TestPungutaApp : PungutaApp() {
  * startup or while composing a screen are caught without a device.
  */
 @RunWith(RobolectricTestRunner::class)
-@Config(application = TestPungutaApp::class)
+@GraphicsMode(GraphicsMode.Mode.NATIVE)
+@Config(application = TestPungutaApp::class, qualifiers = "w393dp-h852dp-xhdpi")
 class AppSmokeTest {
     @get:Rule
     val rule = createAndroidComposeRule<MainActivity>()
@@ -50,8 +55,12 @@ class AppSmokeTest {
         waitForText("Sold rămas")
         rule.onNodeWithText("Nimic înregistrat încă").assertExists()
 
-        tab("Venituri")
+        // Swipe left from the dashboard to reach Venituri.
+        rule.onRoot().performTouchInput { swipeLeft(startX = right - 20f, endX = left + 20f, durationMillis = 300) }
+        rule.mainClock.advanceTimeBy(2_000) // let the pager settle on the next page
         waitForText("Niciun venit în această lună")
+        // Off-screen tabs are disposed, so the dashboard leaving proves the page really changed.
+        rule.waitUntil(10_000) { rule.onAllNodesWithText("Sold rămas").fetchSemanticsNodes().isEmpty() }
 
         tab("Setări")
         waitForText("Exportă datele")
@@ -62,7 +71,8 @@ class AppSmokeTest {
 
         tab("Cheltuieli")
         waitForText("Nicio cheltuială în această lună")
-        rule.onNodeWithText("Scanează bon", useUnmergedTree = true).assertExists()
+        // The scan action lives in the middle of the bar, on every tab.
+        rule.onNode(hasContentDescription("Scanează bon")).assertExists()
 
         // Quick manual expense: description and amount only.
         rule.onNode(hasContentDescription("Cheltuială nouă")).performClick()

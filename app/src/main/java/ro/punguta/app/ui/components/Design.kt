@@ -51,6 +51,8 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
@@ -311,50 +313,93 @@ fun SegmentedTabs(
 
 data class NavItem(val label: String, val icon: ImageVector)
 
-/** Floating pill navigation bar with a soft grey pill that slides to the current tab. */
+/** The raised action in the middle of the bar. */
+data class NavCenterAction(val icon: ImageVector, val contentDescription: String, val onClick: () -> Unit)
+
+/**
+ * Maps a tab position (0..3, fractional while swiping) to its slot in a 5-slot bar whose middle
+ * slot belongs to the center action: the pill skips over the middle between tabs 1 and 2.
+ */
+internal fun navSlot(position: Float, items: Int): Float {
+    val half = items / 2
+    return when {
+        position <= half - 1 -> position
+        position >= half -> position + 1
+        else -> (half - 1) + (position - (half - 1)) * 2
+    }
+}
+
+/**
+ * Floating pill bar: two tabs, a larger raised ink button in the middle (scan a receipt), two
+ * tabs. A soft grey pill follows the pager while swiping and settles on the current tab.
+ */
 @Composable
-fun FloatingNavBar(items: List<NavItem>, selected: Int, onSelect: (Int) -> Unit, modifier: Modifier = Modifier) {
+fun FloatingNavBar(
+    items: List<NavItem>,
+    position: Float,
+    onSelect: (Int) -> Unit,
+    center: NavCenterAction,
+    modifier: Modifier = Modifier,
+) {
     val scheme = MaterialTheme.colorScheme
+    val slots = items.size + 1
+    val selected = kotlin.math.round(position).toInt()
     Box(
         modifier.fillMaxWidth().windowInsetsPadding(WindowInsets.navigationBars)
-            .padding(start = 16.dp, end = 16.dp, top = 4.dp, bottom = 12.dp),
+            .padding(start = 16.dp, end = 16.dp, top = 18.dp, bottom = 12.dp),
     ) {
-        Surface(
-            shape = RoundedCornerShape(32.dp),
-            color = scheme.surface,
-            shadowElevation = 6.dp,
-            modifier = Modifier.fillMaxWidth(),
-        ) {
-            BoxWithConstraints(Modifier.padding(6.dp)) {
-                val segment = maxWidth / items.size
-                val offset by animateDpAsState(
-                    segment * selected.coerceAtLeast(0),
-                    spring(dampingRatio = 0.85f, stiffness = Spring.StiffnessMediumLow),
-                    label = "navPill",
-                )
-                if (selected >= 0) {
-                    Surface(
-                        Modifier.width(segment).heightIn(min = 56.dp).offset { IntOffset(offset.roundToPx(), 0) },
-                        shape = RoundedCornerShape(26.dp),
-                        color = scheme.surfaceContainerHighest,
-                    ) {}
-                }
-                Row(Modifier.fillMaxWidth().selectableGroup()) {
-                    items.forEachIndexed { index, item ->
-                        val isSelected = index == selected
-                        val color = if (isSelected) scheme.onSurface else scheme.onSurfaceVariant
-                        Column(
-                            Modifier.weight(1f).heightIn(min = 56.dp).clip(RoundedCornerShape(26.dp))
-                                .selectable(selected = isSelected, role = Role.Tab, onClick = { onSelect(index) }),
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Center,
-                        ) {
-                            Icon(item.icon, null, Modifier.size(22.dp), tint = color)
-                            Text(item.label, style = MaterialTheme.typography.labelMedium, color = color, maxLines = 1)
-                        }
+        // The bar's background is its own layer so the raised button can overflow its top edge.
+        Surface(Modifier.matchParentSize(), shape = RoundedCornerShape(32.dp), color = scheme.surface, shadowElevation = 6.dp) {}
+        BoxWithConstraints(Modifier.padding(6.dp)) {
+            val segment = maxWidth / slots
+            val slot = navSlot(position, items.size)
+            Surface(
+                Modifier.width(segment).heightIn(min = 56.dp).offset { IntOffset((segment * slot).roundToPx(), 0) },
+                shape = RoundedCornerShape(26.dp),
+                color = scheme.surfaceContainerHighest,
+            ) {}
+            Row(Modifier.fillMaxWidth().selectableGroup(), verticalAlignment = Alignment.CenterVertically) {
+                items.forEachIndexed { index, item ->
+                    if (index == items.size / 2) CenterButton(center, Modifier.weight(1f))
+                    val isSelected = index == selected
+                    val color = if (isSelected) scheme.onSurface else scheme.onSurfaceVariant
+                    Column(
+                        Modifier.weight(1f).heightIn(min = 56.dp).clip(RoundedCornerShape(26.dp))
+                            .selectable(selected = isSelected, role = Role.Tab, onClick = { onSelect(index) }),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center,
+                    ) {
+                        Icon(item.icon, null, Modifier.size(22.dp), tint = color)
+                        Text(
+                            item.label,
+                            style = MaterialTheme.typography.labelSmall,
+                            color = color,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                        )
                     }
                 }
             }
+        }
+    }
+}
+
+/** Bigger than a tab and lifted above the bar, like a "post" button. */
+@Composable
+private fun CenterButton(action: NavCenterAction, modifier: Modifier) {
+    val interaction = remember { MutableInteractionSource() }
+    Box(modifier, contentAlignment = Alignment.Center) {
+        Surface(
+            onClick = action.onClick,
+            shape = CircleShape,
+            color = MaterialTheme.colorScheme.primary,
+            contentColor = MaterialTheme.colorScheme.onPrimary,
+            shadowElevation = 8.dp,
+            interactionSource = interaction,
+            modifier = Modifier.size(64.dp).offset(y = (-18).dp).pressScale(interaction)
+                .semantics { contentDescription = action.contentDescription },
+        ) {
+            Box(contentAlignment = Alignment.Center) { Icon(action.icon, null, Modifier.size(30.dp)) }
         }
     }
 }

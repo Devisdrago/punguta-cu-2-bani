@@ -20,6 +20,8 @@ Everything stays on the phone: no accounts, no backend, no cloud sync, no analyt
 
 - **Income**: recurring income (e.g. salary) added automatically on its day each month, plus
   one-time income. Any month's entry can be edited or deleted without touching the template.
+- **Navigation**: swipe left or right between the four tabs; a large raised scan button sits in
+  the middle of the bottom bar on every tab.
 - **Expenses**: manual entry, receipt scanning, and recurring expenses (rent, subscriptions).
   One expense can hold many items, each in its own category.
 - **Receipt scanning**: camera or gallery photo, on-device OCR (ML Kit, bundled model), a parser
@@ -118,7 +120,7 @@ Design decisions:
 
 ## Tests
 
-94 unit tests, all passing, covering:
+96 unit tests, all passing, covering:
 
 | Area | Test |
 |---|---|

@@ -73,7 +73,6 @@ class ExpensesViewModel(repo: ExpenseRepository, month: StateFlow<YearMonth>) : 
 fun ExpensesScreen(
     monthVm: MonthViewModel,
     onAddManual: () -> Unit,
-    onScan: () -> Unit,
     onEdit: (Long) -> Unit,
     onRecurring: () -> Unit,
     vm: ExpensesViewModel = viewModel(factory = ExpensesViewModel.factory(monthVm.month)),
@@ -85,8 +84,7 @@ fun ExpensesScreen(
     Box(Modifier.fillMaxSize()) {
         LazyColumn(
             Modifier.fillMaxSize(),
-            // Room at the bottom so the last row can scroll above the pinned scan button.
-            contentPadding = PaddingValues(start = 16.dp, end = 16.dp, bottom = 96.dp),
+            contentPadding = PaddingValues(start = 16.dp, end = 16.dp, bottom = 24.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             item {
@@ -169,11 +167,5 @@ fun ExpensesScreen(
                 }
             }
         }
-        PillButton(
-            stringResource(R.string.receipt_scan),
-            onScan,
-            icon = Icons.Outlined.DocumentScanner,
-            modifier = Modifier.align(Alignment.BottomCenter).padding(horizontal = 16.dp, vertical = 12.dp),
-        )
     }
 }
