@@ -20,6 +20,21 @@ object Money {
         return if (withCurrency) "$text lei" else text
     }
 
+    /**
+     * Short amount for tight spaces such as calendar cells, rounded to whole lei:
+     * 34896 -> "349", 125000 -> "1,3k", 1250000 -> "13k".
+     */
+    fun formatCompact(bani: Long): String {
+        val sign = if (bani < 0) "-" else ""
+        val lei = (abs(bani) + 50) / 100
+        val tenths = (lei + 50) / 100 // thousands of lei, in tenths
+        return sign + when {
+            lei < 1_000 -> lei.toString()
+            tenths < 100 -> "${tenths / 10},${tenths % 10}k"
+            else -> "${(lei + 500) / 1_000}k"
+        }
+    }
+
     /** Formats bani for an editable text field, without grouping, e.g. 123450 -> "1234,50". */
     fun formatInput(bani: Long): String {
         val sign = if (bani < 0) "-" else ""

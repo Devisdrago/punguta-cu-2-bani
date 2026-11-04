@@ -17,6 +17,7 @@ data class DashboardData(
     val categoryChanges: List<CategoryChange>,
     val trend: List<MonthTotals>,
     val budgets: List<BudgetStatus>,
+    val calendar: MonthCalendar,
 ) {
     val balanceBani: Long get() = incomeBani - spendingBani
     val isEmpty: Boolean get() = incomeBani == 0L && spendingBani == 0L
@@ -29,6 +30,7 @@ object DashboardCalculator {
      * @param incomes income amounts covering at least the trend window
      * @param items expense item amounts (with categories) covering at least the trend window
      * @param budgets category id to monthly limit
+     * @param lines expense items with their expense, for the daily calendar
      */
     fun build(
         month: YearMonth,
@@ -36,6 +38,7 @@ object DashboardCalculator {
         items: List<DatedAmount>,
         categoryNames: Map<Long, String>,
         budgets: Map<Long, Long>,
+        lines: List<ExpenseLine> = emptyList(),
     ): DashboardData {
         val previous = month.minusMonths(1)
         fun inMonth(list: List<DatedAmount>, m: YearMonth) = list.filter { YearMonth.from(it.date) == m }
@@ -66,6 +69,7 @@ object DashboardCalculator {
             categoryChanges = MonthlyStats.compareCategories(categories, previousCategories),
             trend = MonthlyStats.monthTotals(MonthlyStats.recentMonths(month, TREND_MONTHS), incomes, items),
             budgets = budgetStatuses,
+            calendar = DailySpending.build(month, lines),
         )
     }
 }

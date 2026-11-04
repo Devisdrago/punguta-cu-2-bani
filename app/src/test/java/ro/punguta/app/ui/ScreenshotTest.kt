@@ -101,11 +101,11 @@ open class ScreenshotTest {
             ),
         )
         c.expenses.save(
-            ExpenseDraft(null, "Petrom", thisMonth, null, ExpenseSource.RECEIPT, 24_880,
+            ExpenseDraft(null, "Petrom", minOf(thisMonth.plusDays(1), today), null, ExpenseSource.RECEIPT, 24_880,
                 listOf(ItemDraft("MOTORINA STANDARD", 32_150, 749, 0, 24_080, cat("transport")), ItemDraft("CAFEA", null, null, 0, 800, cat("drinks")))),
         )
         c.expenses.save(
-            ExpenseDraft(null, "Cinema", thisMonth, null, ExpenseSource.MANUAL, null,
+            ExpenseDraft(null, "Cinema", today, null, ExpenseSource.MANUAL, null,
                 listOf(ItemDraft("Bilete film", null, null, 0, 16_400, cat("entertainment")))),
         )
         c.expenses.save(
@@ -122,6 +122,8 @@ open class ScreenshotTest {
         shot("1-dashboard")
         rule.onAllNodesWithText("Cheltuieli pe categorii")[0].performScrollTo()
         shot("2-dashboard-categories")
+        rule.onAllNodesWithText("Calendarul cheltuielilor")[0].performScrollTo()
+        shot("2b-dashboard-calendar")
         rule.onAllNodesWithText("Evoluție în ultimele 6 luni")[0].performScrollTo()
         shot("3-dashboard-trend")
 

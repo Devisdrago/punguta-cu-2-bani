@@ -110,6 +110,7 @@ fun AppNav(nav: NavHostController = rememberNavController()) {
                     onCategory = { nav.navigate(Routes.categoryMonth(it, selectedMonth.toString())) },
                     onBudgets = { nav.navigate(Routes.BUDGETS) },
                     onAddExpense = { nav.navigate(Routes.expenseEdit()) },
+                    onExpense = { nav.navigate(Routes.expenseEdit(it)) },
                     onScan = { nav.navigate(Routes.SCAN) },
                 )
             }

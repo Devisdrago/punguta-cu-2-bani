@@ -14,6 +14,7 @@ import ro.punguta.app.AppContainer
 import ro.punguta.app.domain.stats.DashboardCalculator
 import ro.punguta.app.domain.stats.DashboardData
 import ro.punguta.app.domain.stats.DatedAmount
+import ro.punguta.app.domain.stats.ExpenseLine
 import ro.punguta.app.ui.appViewModelFactory
 import java.time.LocalDate
 import java.time.YearMonth
@@ -40,6 +41,7 @@ class DashboardViewModel(c: AppContainer, month: StateFlow<YearMonth>) : ViewMod
                 items = items.map { DatedAmount(LocalDate.ofEpochDay(it.date), it.item.amountBani, it.item.categoryId) },
                 categoryNames = categories.associate { it.id to it.name },
                 budgets = budgets,
+                lines = items.map { ExpenseLine(LocalDate.ofEpochDay(it.date), it.item.expenseId, it.title, it.item.amountBani) },
             )
         }
     }

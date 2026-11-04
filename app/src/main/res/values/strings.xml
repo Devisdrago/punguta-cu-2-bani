@@ -145,6 +145,12 @@
     <string name="dash_savings_na">— (fără venituri)</string>
     <string name="dash_by_category">Cheltuieli pe categorii</string>
     <string name="dash_trend">Evoluție în ultimele 6 luni</string>
+    <string name="calendar_title">Calendarul cheltuielilor</string>
+    <string name="calendar_hint">Cât ai cheltuit în fiecare zi. Atinge o zi pentru detalii.</string>
+    <string name="calendar_less">mai puțin</string>
+    <string name="calendar_more">mai mult</string>
+    <string name="calendar_day_empty">Nicio cheltuială în această zi.</string>
+    <string name="calendar_day_description">%1$s: %2$s cheltuiți</string>
     <string name="dash_changes">Schimbări față de luna trecută</string>
     <string name="dash_change_detail">%1$s → %2$s</string>
     <string name="dash_empty_title">Nimic înregistrat încă</string>

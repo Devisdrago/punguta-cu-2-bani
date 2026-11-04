@@ -17,6 +17,18 @@ class MoneyTest {
     }
 
     @Test
+    fun `compact amounts for calendar cells`() {
+        assertEquals("0", Money.formatCompact(0))
+        assertEquals("349", Money.formatCompact(34_896))
+        assertEquals("999", Money.formatCompact(99_900))
+        assertEquals("1,0k", Money.formatCompact(100_000))
+        assertEquals("1,3k", Money.formatCompact(125_000))
+        assertEquals("10k", Money.formatCompact(999_999))
+        assertEquals("13k", Money.formatCompact(1_250_000))
+        assertEquals("-50", Money.formatCompact(-5_000))
+    }
+
+    @Test
     fun `formats input without grouping`() {
         assertEquals("1234,50", Money.formatInput(123_450))
         assertEquals("0,07", Money.formatInput(7))

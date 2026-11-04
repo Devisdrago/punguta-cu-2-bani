@@ -67,6 +67,7 @@ fun DashboardScreen(
     onBudgets: () -> Unit,
     onAddExpense: () -> Unit,
     onScan: () -> Unit,
+    onExpense: (Long) -> Unit,
     vm: DashboardViewModel = viewModel(factory = DashboardViewModel.factory(monthVm.month)),
 ) {
     val month by monthVm.month.collectAsStateWithLifecycle()
@@ -96,6 +97,7 @@ fun DashboardScreen(
                         onScan,
                         icon = Icons.Outlined.DocumentScanner,
                     )
+                    SpendingCalendar(s.data.calendar, onExpense)
                     if (s.data.isEmpty) {
                         AppCard {
                             EmptyState(

@@ -31,6 +31,7 @@ Everything stays on the phone: no accounts, no backend, no cloud sync, no analyt
   category you choose. Categories are suggested on-device by keyword rules, and your corrections
   are remembered and take priority.
 - **Dashboard** (one month at a time):
+  - a spending calendar: every day shows what you spent, busier days are tinted stronger, and tapping a day lists its expenses
   - income, spending, remaining balance and savings rate
   - spending by category as a donut chart plus a sorted list; tap a category to see its items
   - a 6-month trend chart
@@ -117,7 +118,7 @@ Design decisions:
 
 ## Tests
 
-89 unit tests, all passing, covering:
+94 unit tests, all passing, covering:
 
 | Area | Test |
 |---|---|
