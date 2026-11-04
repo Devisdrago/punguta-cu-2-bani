@@ -3,6 +3,15 @@
 [![Descarcă APK](https://img.shields.io/badge/Descarc%C4%83-APK%20pentru%20Android-2E6B3F?style=for-the-badge&logo=android&logoColor=white)](https://github.com/Devisdrago/punguta-cu-2-bani/releases/latest/download/punguta-cu-2-bani.apk)
 [![Release](https://img.shields.io/github/v/release/Devisdrago/punguta-cu-2-bani?style=for-the-badge)](https://github.com/Devisdrago/punguta-cu-2-bani/releases/latest)
 
+<p>
+  <img src="docs/screenshots/1-dashboard-light.png" width="200" alt="Panou lunar">
+  <img src="docs/screenshots/5-expenses-light.png" width="200" alt="Cheltuieli">
+  <img src="docs/screenshots/6-expense-editor-light.png" width="200" alt="Editare cheltuială">
+  <img src="docs/screenshots/1-dashboard-dark.png" width="200" alt="Panou, temă întunecată">
+</p>
+
+*Screenshots use demo data, rendered by `ScreenshotTest`.*
+
 A private, offline Android app for tracking personal monthly income and spending in RON.
 Everything stays on the phone: no accounts, no backend, no cloud sync, no analytics, and no
 `INTERNET` permission. The UI is in Romanian; code and comments are in English.
@@ -68,6 +77,11 @@ gradlew lintDebug            # static checks
 If Gradle fails on Windows with "Unable to establish loopback connection", point Java's socket
 temp folder somewhere simple, e.g. `JAVA_TOOL_OPTIONS=-Djdk.net.unixdomain.tmpdir=C:\jdktmp`.
 
+## Design
+
+The look follows a soft-grey, white-card style: a bold Geist headline, black pill buttons, one coral
+accent and a floating pill navigation bar. Tokens and components are documented in [DESIGN.md](DESIGN.md).
+
 ## Architecture
 
 ```
@@ -103,7 +117,7 @@ Design decisions:
 
 ## Tests
 
-87 unit tests, all passing, covering:
+89 unit tests, all passing, covering:
 
 | Area | Test |
 |---|---|
@@ -117,6 +131,7 @@ Design decisions:
 | Room schema and migrations | `MigrationTest` |
 | App lock | `AppLockTest` |
 | Launch app, render every tab, add an expense | `AppSmokeTest` (Robolectric) |
+| Render main screens in light and dark to `app/build/screenshots/` | `ScreenshotTest` (Robolectric, native graphics) |
 
 ## Known limitations
 

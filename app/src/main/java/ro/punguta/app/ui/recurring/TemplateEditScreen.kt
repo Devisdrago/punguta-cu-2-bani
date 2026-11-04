@@ -55,6 +55,12 @@ import ro.punguta.app.ui.components.CategoryDropdown
 import ro.punguta.app.ui.components.ConfirmDialog
 import ro.punguta.app.ui.components.DateField
 import ro.punguta.app.ui.components.LoadingState
+import ro.punguta.app.ui.components.highlightColors
+import ro.punguta.app.ui.components.DetailTopBar
+import ro.punguta.app.ui.components.PillButton
+import ro.punguta.app.ui.components.PillKind
+import ro.punguta.app.ui.components.RoundIconButton
+import androidx.compose.material.icons.outlined.Delete
 import java.time.LocalDate
 
 data class TemplateForm(
@@ -158,27 +164,20 @@ fun TemplateEditScreen(onDone: () -> Unit, vm: TemplateEditViewModel = viewModel
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        stringResource(
-                            when {
-                                form.id != 0L -> R.string.template_edit
-                                isExpense -> R.string.template_new_expense
-                                else -> R.string.template_new_income
-                            },
-                        ),
-                    )
-                },
-                navigationIcon = {
-                    IconButton(onClick = onDone) { Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(R.string.back)) }
-                },
-                actions = {
-                    if (form.id != 0L) {
-                        IconButton(onClick = { confirm = "delete" }) { Icon(Icons.Default.Delete, stringResource(R.string.delete)) }
-                    }
-                },
-            )
+            DetailTopBar(
+                stringResource(
+                    when {
+                        form.id != 0L -> R.string.template_edit
+                        isExpense -> R.string.template_new_expense
+                        else -> R.string.template_new_income
+                    },
+                ),
+                onDone,
+            ) {
+                if (form.id != 0L) {
+                    RoundIconButton(Icons.Outlined.Delete, stringResource(R.string.delete), { confirm = "delete" })
+                }
+            }
         },
     ) { padding ->
         if (!form.loaded) {
@@ -197,6 +196,7 @@ fun TemplateEditScreen(onDone: () -> Unit, vm: TemplateEditViewModel = viewModel
                 )
             }
             OutlinedTextField(
+                colors = highlightColors(false),
                 value = form.name,
                 onValueChange = { v -> vm.update { it.copy(name = v) } },
                 label = { Text(stringResource(R.string.name)) },
@@ -214,6 +214,7 @@ fun TemplateEditScreen(onDone: () -> Unit, vm: TemplateEditViewModel = viewModel
                 modifier = Modifier.fillMaxWidth(),
             )
             OutlinedTextField(
+                colors = highlightColors(false),
                 value = form.day,
                 onValueChange = { v -> vm.update { it.copy(day = v.filter(Char::isDigit).take(2)) } },
                 label = { Text(stringResource(R.string.template_day_label)) },
@@ -247,21 +248,18 @@ fun TemplateEditScreen(onDone: () -> Unit, vm: TemplateEditViewModel = viewModel
                 )
             }
             OutlinedTextField(
+                colors = highlightColors(false),
                 value = form.note,
                 onValueChange = { v -> vm.update { it.copy(note = v) } },
                 label = { Text(stringResource(R.string.note_optional)) },
                 modifier = Modifier.fillMaxWidth(),
             )
-            Button(onClick = vm::save, modifier = Modifier.fillMaxWidth()) { Text(stringResource(R.string.save)) }
+            PillButton(stringResource(R.string.save), vm::save, modifier = Modifier.padding(top = 8.dp))
             if (form.id != 0L) {
                 if (form.isStopped) {
-                    OutlinedButton(onClick = vm::resume, modifier = Modifier.fillMaxWidth()) {
-                        Text(stringResource(R.string.template_resume))
-                    }
+                    PillButton(stringResource(R.string.template_resume), vm::resume, kind = PillKind.SECONDARY)
                 } else {
-                    OutlinedButton(onClick = { confirm = "stop" }, modifier = Modifier.fillMaxWidth()) {
-                        Text(stringResource(R.string.template_stop))
-                    }
+                    PillButton(stringResource(R.string.template_stop), { confirm = "stop" }, kind = PillKind.SECONDARY)
                 }
             }
         }

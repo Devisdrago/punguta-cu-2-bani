@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
@@ -17,6 +18,7 @@ import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.ErrorOutline
+import androidx.compose.material.icons.filled.Today
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DatePicker
@@ -49,6 +51,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import ro.punguta.app.R
 import ro.punguta.app.data.db.CategoryEntity
+import ro.punguta.app.ui.theme.LocalMoneyPalette
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
@@ -66,41 +69,38 @@ fun formatDate(date: LocalDate): String = date.format(dateFormat)
 
 fun formatEpochDay(epochDay: Long): String = formatDate(LocalDate.ofEpochDay(epochDay))
 
+/** Month name only ("Noiembrie"), for the dashboard's headline. */
+fun monthName(month: YearMonth): String =
+    month.month.getDisplayName(java.time.format.TextStyle.FULL_STANDALONE, RO).replaceFirstChar { it.titlecase(RO) }
+
+/** Round previous/next month buttons for a [ScreenHeader]'s actions. */
 @Composable
-fun MonthSwitcher(
-    month: YearMonth,
-    onPrevious: () -> Unit,
-    onNext: () -> Unit,
-    onCurrent: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    val isCurrent = month == YearMonth.now()
-    Row(modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-        IconButton(onClick = onPrevious) {
-            Icon(Icons.AutoMirrored.Filled.KeyboardArrowLeft, stringResource(R.string.month_previous))
-        }
-        Column(Modifier.weight(1f), horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(formatMonth(month), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
-            if (!isCurrent) {
-                TextButton(onClick = onCurrent) { Text(stringResource(R.string.month_current)) }
-            }
-        }
-        IconButton(onClick = onNext) {
-            Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, stringResource(R.string.month_next))
-        }
+fun MonthNavButtons(onPrevious: () -> Unit, onNext: () -> Unit) {
+    RoundIconButton(Icons.AutoMirrored.Filled.KeyboardArrowLeft, stringResource(R.string.month_previous), onPrevious)
+    RoundIconButton(Icons.AutoMirrored.Filled.KeyboardArrowRight, stringResource(R.string.month_next), onNext)
+}
+
+/** Chip under a header that jumps back to the current month; hidden when already there. */
+@Composable
+fun BackToCurrentMonth(month: YearMonth, onCurrent: () -> Unit) {
+    if (month == YearMonth.now()) return
+    TextButton(onClick = onCurrent, modifier = Modifier.padding(top = 4.dp)) {
+        Icon(Icons.Default.Today, null, Modifier.size(18.dp))
+        Spacer(Modifier.width(6.dp))
+        Text(stringResource(R.string.month_current))
     }
 }
 
 @Composable
 fun EmptyState(icon: ImageVector, title: String, message: String, modifier: Modifier = Modifier) {
     Column(
-        modifier.fillMaxWidth().padding(32.dp),
+        modifier.fillMaxWidth().padding(horizontal = 32.dp, vertical = 40.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
-        Icon(icon, null, Modifier.size(48.dp), tint = MaterialTheme.colorScheme.outline)
-        Spacer(Modifier.height(12.dp))
-        Text(title, style = MaterialTheme.typography.titleMedium, textAlign = TextAlign.Center)
+        IconBadge(icon, BadgeTone.NEUTRAL, size = 64.dp)
+        Spacer(Modifier.height(16.dp))
+        Text(title, style = MaterialTheme.typography.titleLarge, textAlign = TextAlign.Center)
         Spacer(Modifier.height(4.dp))
         Text(
             message,
@@ -164,14 +164,25 @@ fun AmountField(
 }
 
 @Composable
-fun highlightColors(highlight: Boolean) = if (highlight) {
-    OutlinedTextFieldDefaults.colors(
-        unfocusedBorderColor = ro.punguta.app.ui.theme.MoneyColors.warning,
-        unfocusedContainerColor = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.35f),
-        focusedContainerColor = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.35f),
-    )
-} else {
-    OutlinedTextFieldDefaults.colors()
+fun highlightColors(highlight: Boolean): androidx.compose.material3.TextFieldColors {
+    val scheme = MaterialTheme.colorScheme
+    return if (highlight) {
+        // Uncertain OCR value: an accent-tinted field the eye finds before saving.
+        val tint = LocalMoneyPalette.current.accent
+        OutlinedTextFieldDefaults.colors(
+            unfocusedBorderColor = tint,
+            focusedBorderColor = scheme.primary,
+            unfocusedContainerColor = scheme.secondaryContainer.copy(alpha = 0.55f),
+            focusedContainerColor = scheme.secondaryContainer.copy(alpha = 0.55f),
+        )
+    } else {
+        OutlinedTextFieldDefaults.colors(
+            unfocusedBorderColor = scheme.outlineVariant,
+            focusedBorderColor = scheme.primary,
+            unfocusedContainerColor = scheme.surface,
+            focusedContainerColor = scheme.surface,
+        )
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -252,3 +263,27 @@ fun DateField(
     }
 }
 
+
+/** White pill with the month between previous/next arrows, for list screens. */
+@Composable
+fun MonthPill(month: YearMonth, onPrevious: () -> Unit, onNext: () -> Unit, onCurrent: () -> Unit) {
+    Column(Modifier.padding(top = 12.dp)) {
+        androidx.compose.material3.Surface(shape = androidx.compose.foundation.shape.CircleShape, color = MaterialTheme.colorScheme.surface) {
+            Row(Modifier.padding(4.dp), verticalAlignment = Alignment.CenterVertically) {
+                IconButton(onClick = onPrevious) {
+                    Icon(Icons.AutoMirrored.Filled.KeyboardArrowLeft, stringResource(R.string.month_previous))
+                }
+                Text(
+                    formatMonth(month),
+                    style = MaterialTheme.typography.titleMedium,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.weight(1f),
+                )
+                IconButton(onClick = onNext) {
+                    Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, stringResource(R.string.month_next))
+                }
+            }
+        }
+        BackToCurrentMonth(month, onCurrent)
+    }
+}

@@ -43,9 +43,10 @@ import java.time.format.TextStyle
 
 /** Distinguishable colors for categories; repeats after the end of the list. */
 val categoryPalette = listOf(
-    Color(0xFF2E7D32), Color(0xFFE6A100), Color(0xFF1565C0), Color(0xFFC62828), Color(0xFF6A1B9A),
-    Color(0xFF00838F), Color(0xFFEF6C00), Color(0xFF5D4037), Color(0xFFAD1457), Color(0xFF546E7A),
-    Color(0xFF9E9D24), Color(0xFF283593),
+    // Coral leads; the rest are distinguishable on white and on the dark card.
+    Color(0xFFEF5B36), Color(0xFF3B6FE0), Color(0xFF1E9E63), Color(0xFFD99A00), Color(0xFF8A5CE6),
+    Color(0xFF0E9AA7), Color(0xFFDB4C83), Color(0xFF9A7350), Color(0xFF66738A), Color(0xFFB7B7AF),
+    Color(0xFF5E9E1E), Color(0xFFC23B22),
 )
 
 fun categoryColor(index: Int): Color = categoryPalette[index % categoryPalette.size]
@@ -110,8 +111,8 @@ fun TrendChart(trend: List<MonthTotals>, modifier: Modifier = Modifier) {
             chart = rememberCartesianChart(
                 rememberColumnCartesianLayer(
                     columnProvider = ColumnCartesianLayer.ColumnProvider.series(
-                        rememberLineComponent(fill = fill(incomeColor), thickness = 10.dp),
-                        rememberLineComponent(fill = fill(spendingColor), thickness = 10.dp),
+                        rememberLineComponent(fill = fill(incomeColor), thickness = 12.dp),
+                        rememberLineComponent(fill = fill(spendingColor), thickness = 12.dp),
                     ),
                 ),
                 startAxis = VerticalAxis.rememberStart(valueFormatter = startFormatter),

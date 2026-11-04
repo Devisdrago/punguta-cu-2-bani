@@ -61,6 +61,14 @@ import ro.punguta.app.ui.components.CategoryDropdown
 import ro.punguta.app.ui.components.ConfirmDialog
 import ro.punguta.app.ui.components.DateField
 import ro.punguta.app.ui.components.LoadingState
+import ro.punguta.app.ui.components.DetailTopBar
+import ro.punguta.app.ui.components.PillButton
+import ro.punguta.app.ui.components.PillKind
+import ro.punguta.app.ui.components.RoundIconButton
+import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import ro.punguta.app.ui.components.highlightColors
 import java.time.YearMonth
 
@@ -86,30 +94,19 @@ fun ExpenseEditScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        stringResource(
-                            when {
-                                form.isReceipt && form.id == null -> R.string.receipt_review
-                                form.id != null -> R.string.expense_edit
-                                else -> R.string.expense_add
-                            },
-                        ),
-                    )
-                },
-                navigationIcon = {
-                    IconButton(onClick = onClose) {
-                        Icon(if (guardBack) Icons.Default.Close else Icons.AutoMirrored.Filled.ArrowBack, stringResource(R.string.back))
-                    }
-                },
-                actions = {
-                    if (form.id != null) {
-                        IconButton(onClick = { confirm = "delete" }) { Icon(Icons.Default.Delete, stringResource(R.string.delete)) }
-                    }
-                    TextButton(onClick = { vm.save() }, enabled = form.loaded) { Text(stringResource(R.string.save)) }
-                },
-            )
+            DetailTopBar(
+                stringResource(
+                    when {
+                        form.isReceipt && form.id == null -> R.string.receipt_review
+                        form.id != null -> R.string.expense_edit
+                        else -> R.string.expense_add
+                    },
+                ),
+                onBack = onClose,
+                backIcon = if (guardBack) Icons.Default.Close else Icons.AutoMirrored.Filled.ArrowBack,
+            ) {
+                TextButton(onClick = { vm.save() }, enabled = form.loaded) { Text(stringResource(R.string.save)) }
+            }
         },
         bottomBar = { if (form.loaded) TotalsBar(form) },
     ) { padding ->
@@ -151,14 +148,19 @@ fun ExpenseEditScreen(
                 )
             }
             item {
-                OutlinedButton(onClick = vm::addItem, modifier = Modifier.fillMaxWidth()) {
-                    Icon(Icons.Default.Add, null)
-                    Spacer(Modifier.width(8.dp))
-                    Text(stringResource(R.string.item_add))
-                }
+                PillButton(stringResource(R.string.item_add), vm::addItem, icon = Icons.Default.Add, kind = PillKind.SECONDARY)
             }
             item {
-                Button(onClick = { vm.save() }, modifier = Modifier.fillMaxWidth()) { Text(stringResource(R.string.save)) }
+                PillButton(stringResource(R.string.save), { vm.save() })
+                if (form.id != null) {
+                    PillButton(
+                        stringResource(R.string.expense_delete),
+                        { confirm = "delete" },
+                        icon = Icons.Outlined.Delete,
+                        kind = PillKind.DANGER,
+                        modifier = Modifier.padding(top = 12.dp),
+                    )
+                }
             }
         }
     }
@@ -228,6 +230,7 @@ private fun Header(form: ExpenseForm, vm: ExpenseEditViewModel) {
             value = form.note,
             onValueChange = { v -> vm.updateHeader(null) { it.copy(note = v) } },
             label = { Text(stringResource(R.string.note_optional)) },
+            colors = highlightColors(false),
             modifier = Modifier.fillMaxWidth(),
         )
     }
@@ -241,7 +244,7 @@ private fun ItemCard(
     canRemove: Boolean,
     vm: ExpenseEditViewModel,
 ) {
-    Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow)) {
+    Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface), shape = MaterialTheme.shapes.large) {
         Column(Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 OutlinedTextField(
@@ -254,7 +257,7 @@ private fun ItemCard(
                 )
                 if (canRemove) {
                     IconButton(onClick = { vm.removeItem(item.key) }) {
-                        Icon(Icons.Default.Delete, stringResource(R.string.item_remove))
+                        Icon(Icons.Outlined.Delete, stringResource(R.string.item_remove))
                     }
                 }
             }
@@ -318,8 +321,8 @@ private fun ItemCard(
 private fun TotalsBar(form: ExpenseForm) {
     val diff = form.totalDifferenceBani
     val mismatch = diff != null && diff != 0L
-    Surface(tonalElevation = 3.dp) {
-        Column(Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 10.dp)) {
+    Surface(color = MaterialTheme.colorScheme.surface, shape = MaterialTheme.shapes.large.copy(bottomStart = androidx.compose.foundation.shape.CornerSize(0.dp), bottomEnd = androidx.compose.foundation.shape.CornerSize(0.dp)), shadowElevation = 8.dp) {
+        Column(Modifier.fillMaxWidth().windowInsetsPadding(WindowInsets.navigationBars).padding(horizontal = 20.dp, vertical = 14.dp)) {
             Row {
                 Text(stringResource(R.string.items_total), Modifier.weight(1f))
                 Text(Money.format(form.itemsTotalBani), fontWeight = FontWeight.Bold)

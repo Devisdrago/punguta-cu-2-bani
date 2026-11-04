@@ -43,6 +43,11 @@ import ro.punguta.app.domain.money.Money
 import ro.punguta.app.ui.appViewModelFactory
 import ro.punguta.app.ui.components.AmountField
 import ro.punguta.app.ui.components.LoadingState
+import ro.punguta.app.ui.components.AppCard
+import ro.punguta.app.ui.components.CardRow
+import ro.punguta.app.ui.components.DetailTopBar
+import ro.punguta.app.ui.theme.tabular
+import androidx.compose.foundation.layout.PaddingValues
 
 data class BudgetRow(val category: CategoryEntity, val limitBani: Long?)
 
@@ -65,38 +70,38 @@ fun BudgetsScreen(onBack: () -> Unit, vm: BudgetsViewModel = viewModel(factory =
     var editing by remember { mutableStateOf<BudgetRow?>(null) }
 
     Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(stringResource(R.string.budgets)) },
-                navigationIcon = {
-                    IconButton(onClick = onBack) { Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(R.string.back)) }
-                },
-            )
-        },
+        topBar = { DetailTopBar(stringResource(R.string.budgets), onBack) },
     ) { padding ->
         val list = rows
         if (list == null) {
             LoadingState(Modifier.padding(padding))
             return@Scaffold
         }
-        LazyColumn(Modifier.padding(padding)) {
+        LazyColumn(Modifier.padding(padding), contentPadding = PaddingValues(16.dp)) {
             item {
                 Text(
                     stringResource(R.string.budgets_explainer),
-                    style = MaterialTheme.typography.bodySmall,
+                    style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.padding(16.dp),
+                    modifier = Modifier.padding(start = 4.dp, end = 4.dp, bottom = 12.dp),
                 )
             }
-            items(list, key = { it.category.id }) { row ->
-                ListItem(
-                    headlineContent = { Text(row.category.name) },
-                    trailingContent = {
-                        Text(row.limitBani?.let { Money.format(it) } ?: stringResource(R.string.budget_unset))
-                    },
-                    modifier = Modifier.clickable { editing = row },
-                )
-                HorizontalDivider()
+            item {
+                AppCard(contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp)) {
+                    list.forEach { row ->
+                        CardRow(
+                            title = row.category.name,
+                            trailing = {
+                                Text(
+                                    row.limitBani?.let { Money.format(it) } ?: stringResource(R.string.budget_unset),
+                                    style = MaterialTheme.typography.titleSmall.tabular,
+                                    color = if (row.limitBani == null) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.onSurface,
+                                )
+                            },
+                            onClick = { editing = row },
+                        )
+                    }
+                }
             }
         }
     }

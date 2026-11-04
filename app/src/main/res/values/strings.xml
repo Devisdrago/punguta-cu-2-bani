@@ -50,7 +50,6 @@
     <string name="date">Data</string>
     <string name="note_optional">Notă (opțional)</string>
     <string name="total">Total</string>
-    <string name="recurring">Recurent</string>
     <string name="discard">Renunță</string>
     <string name="delete_cannot_undo">Acțiunea nu poate fi anulată.</string>
     <string name="error_amount">Introdu o sumă validă, de exemplu 12,50.</string>
@@ -95,6 +94,7 @@
     <string name="expense_add">Cheltuială nouă</string>
     <string name="expense_edit">Editează cheltuiala</string>
     <string name="expense_delete_title">Ștergi cheltuiala?</string>
+    <string name="expense_delete">Șterge cheltuiala</string>
     <string name="expenses_empty_title">Nicio cheltuială în această lună</string>
     <string name="expenses_empty_message">Scanează un bon sau adaugă o cheltuială manual.</string>
     <string name="receipt_scan">Scanează bon</string>
@@ -133,11 +133,16 @@
 
     <!-- Dashboard -->
     <string name="dash_balance">Sold rămas</string>
+    <string name="dash_subtitle">%1$d · Situația lunii pe scurt</string>
+    <string name="filter_all">Toate</string>
+    <string name="filter_recurring">Recurente</string>
+    <string name="filter_one_time">Ocazionale</string>
+    <string name="filter_receipts">Bonuri</string>
+    <string name="filter_empty">Nimic aici pentru filtrul ales.</string>
     <string name="dash_income">Venituri</string>
     <string name="dash_spending">Cheltuieli</string>
     <string name="dash_savings_rate">Rata de economisire</string>
     <string name="dash_savings_na">— (fără venituri)</string>
-    <string name="dash_vs_previous">față de luna trecută</string>
     <string name="dash_by_category">Cheltuieli pe categorii</string>
     <string name="dash_trend">Evoluție în ultimele 6 luni</string>
     <string name="dash_changes">Schimbări față de luna trecută</string>
@@ -186,6 +191,7 @@
     <string name="warn_discount_spread">Reducerea de pe bon a fost împărțită proporțional între articole.</string>
 
     <!-- Security -->
+    <string name="settings_subtitle">Totul rămâne pe telefonul tău.</string>
     <string name="security">Securitate</string>
     <string name="lock_setting">Blocare cu amprentă</string>
     <string name="lock_setting_hint">Cere amprenta (sau PIN-ul/modelul telefonului) la deschiderea aplicației și după ce a stat în fundal.</string>

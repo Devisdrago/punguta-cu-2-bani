@@ -58,6 +58,20 @@ import ro.punguta.app.R
 import ro.punguta.app.security.AuthAvailability
 import ro.punguta.app.security.Biometrics
 import ro.punguta.app.ui.components.formatDate
+import ro.punguta.app.ui.components.AppCard
+import ro.punguta.app.ui.components.BadgeTone
+import ro.punguta.app.ui.components.CardRow
+import ro.punguta.app.ui.components.IconBadge
+import ro.punguta.app.ui.components.ScreenHeader
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
+import androidx.compose.material.icons.outlined.Category
+import androidx.compose.material.icons.outlined.Download
+import androidx.compose.material.icons.outlined.Fingerprint
+import androidx.compose.material.icons.outlined.Savings
+import androidx.compose.material.icons.outlined.Upload
+import androidx.compose.material.icons.outlined.WarningAmber
 import java.time.Instant
 import java.time.ZoneId
 
@@ -100,42 +114,48 @@ fun SettingsScreen(
     val promptSubtitle = stringResource(R.string.lock_prompt_subtitle)
 
     Scaffold(
-        topBar = { TopAppBar(title = { Text(stringResource(R.string.tab_settings)) }) },
+        containerColor = MaterialTheme.colorScheme.background,
+        contentWindowInsets = WindowInsets(0),
         snackbarHost = { SnackbarHost(snackbar) },
     ) { padding ->
-        Column(Modifier.padding(padding).fillMaxSize().verticalScroll(rememberScrollState())) {
-            ListItem(
-                headlineContent = { Text(stringResource(R.string.categories)) },
-                supportingContent = { Text(stringResource(R.string.categories_hint)) },
-                leadingContent = { Icon(Icons.Default.Category, null) },
-                modifier = Modifier.clickable(onClick = onCategories),
-            )
-            HorizontalDivider()
-            ListItem(
-                headlineContent = { Text(stringResource(R.string.budgets)) },
-                supportingContent = { Text(stringResource(R.string.budgets_hint)) },
-                leadingContent = { Icon(Icons.Default.Savings, null) },
-                modifier = Modifier.clickable(onClick = onBudgets),
-            )
-            HorizontalDivider()
+        Column(
+            Modifier.padding(padding).fillMaxSize().verticalScroll(rememberScrollState())
+                .padding(horizontal = 16.dp).padding(bottom = 24.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+        ) {
+            ScreenHeader(stringResource(R.string.tab_settings), stringResource(R.string.settings_subtitle), sidePadding = 2.dp)
+
+            AppCard(contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp)) {
+                CardRow(
+                    title = stringResource(R.string.categories),
+                    subtitle = stringResource(R.string.categories_hint),
+                    leading = { IconBadge(Icons.Outlined.Category) },
+                    trailing = { Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, null) },
+                    onClick = onCategories,
+                )
+                CardRow(
+                    title = stringResource(R.string.budgets),
+                    subtitle = stringResource(R.string.budgets_hint),
+                    leading = { IconBadge(Icons.Outlined.Savings) },
+                    trailing = { Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, null) },
+                    onClick = onBudgets,
+                )
+            }
 
             SectionTitle(stringResource(R.string.security))
-            ListItem(
-                headlineContent = { Text(stringResource(R.string.lock_setting)) },
-                supportingContent = {
-                    Text(
-                        stringResource(
-                            when {
-                                lockError != null -> lockError!!
-                                availability == AuthAvailability.AVAILABLE -> R.string.lock_setting_hint
-                                availability == AuthAvailability.NOT_SET_UP -> R.string.lock_not_set_up
-                                else -> R.string.lock_unsupported
-                            },
-                        ),
-                    )
-                },
-                leadingContent = { Icon(Icons.Default.Fingerprint, null) },
-                trailingContent = {
+            AppCard(contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp)) {
+            CardRow(
+                title = stringResource(R.string.lock_setting),
+                subtitle = stringResource(
+                    when {
+                        lockError != null -> lockError!!
+                        availability == AuthAvailability.AVAILABLE -> R.string.lock_setting_hint
+                        availability == AuthAvailability.NOT_SET_UP -> R.string.lock_not_set_up
+                        else -> R.string.lock_unsupported
+                    },
+                ),
+                leading = { IconBadge(Icons.Outlined.Fingerprint, if (lockEnabled) BadgeTone.ACCENT else BadgeTone.NEUTRAL) },
+                trailing = {
                     Switch(
                         checked = lockEnabled,
                         enabled = lockEnabled || availability == AuthAvailability.AVAILABLE,
@@ -168,47 +188,58 @@ fun SettingsScreen(
                     modifier = Modifier.padding(horizontal = 16.dp),
                 ) { Text(stringResource(R.string.lock_open_security_settings)) }
             }
-            HorizontalDivider()
+            }
 
             SectionTitle(stringResource(R.string.backup))
-            Card(
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.errorContainer),
-                modifier = Modifier.padding(horizontal = 16.dp).fillMaxWidth(),
-            ) {
-                Row(Modifier.padding(12.dp), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                    Icon(Icons.Default.Warning, null)
+            AppCard(color = MaterialTheme.colorScheme.secondaryContainer) {
+                Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                    IconBadge(Icons.Outlined.WarningAmber, BadgeTone.ACCENT, size = 40.dp)
                     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                        Text(stringResource(R.string.backup_warning_title), fontWeight = FontWeight.SemiBold)
-                        Text(stringResource(R.string.backup_warning_body), style = MaterialTheme.typography.bodySmall)
+                        Text(
+                            stringResource(R.string.backup_warning_title),
+                            style = MaterialTheme.typography.titleMedium,
+                            color = MaterialTheme.colorScheme.onSecondaryContainer,
+                        )
+                        Text(
+                            stringResource(R.string.backup_warning_body),
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSecondaryContainer,
+                        )
+                        Text(
+                            lastExport?.let {
+                                stringResource(R.string.backup_last_export, formatDate(Instant.ofEpochMilli(it).atZone(ZoneId.systemDefault()).toLocalDate()))
+                            } ?: stringResource(R.string.backup_never_exported),
+                            style = MaterialTheme.typography.labelLarge,
+                            color = if (lastExport == null) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSecondaryContainer,
+                            modifier = Modifier.padding(top = 4.dp),
+                        )
                     }
                 }
             }
-            Text(
-                lastExport?.let {
-                    stringResource(R.string.backup_last_export, formatDate(Instant.ofEpochMilli(it).atZone(ZoneId.systemDefault()).toLocalDate()))
-                } ?: stringResource(R.string.backup_never_exported),
-                style = MaterialTheme.typography.bodySmall,
-                color = if (lastExport == null) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.padding(16.dp),
-            )
-            ListItem(
-                headlineContent = { Text(stringResource(R.string.backup_export)) },
-                supportingContent = { Text(stringResource(R.string.backup_export_hint)) },
-                leadingContent = { Icon(Icons.Default.Upload, null) },
-                modifier = Modifier.clickable(enabled = backup !is BackupUi.Working) {
-                    lock.expectReturn()
-                    exportLauncher.launch(vm.suggestedFileName())
-                },
-            )
-            ListItem(
-                headlineContent = { Text(stringResource(R.string.backup_restore)) },
-                supportingContent = { Text(stringResource(R.string.backup_restore_hint)) },
-                leadingContent = { Icon(Icons.Default.Download, null) },
-                modifier = Modifier.clickable(enabled = backup !is BackupUi.Working) {
-                    lock.expectReturn()
-                    importLauncher.launch(arrayOf("application/json", "text/plain", "application/octet-stream"))
-                },
-            )
+            AppCard(contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp)) {
+                CardRow(
+                    title = stringResource(R.string.backup_export),
+                    subtitle = stringResource(R.string.backup_export_hint),
+                    leading = { IconBadge(Icons.Outlined.Upload, BadgeTone.INK) },
+                    onClick = if (backup is BackupUi.Working) null else {
+                        {
+                            lock.expectReturn()
+                            exportLauncher.launch(vm.suggestedFileName())
+                        }
+                    },
+                )
+                CardRow(
+                    title = stringResource(R.string.backup_restore),
+                    subtitle = stringResource(R.string.backup_restore_hint),
+                    leading = { IconBadge(Icons.Outlined.Download) },
+                    onClick = if (backup is BackupUi.Working) null else {
+                        {
+                            lock.expectReturn()
+                            importLauncher.launch(arrayOf("application/json", "text/plain", "application/octet-stream"))
+                        }
+                    },
+                )
+            }
             if (backup is BackupUi.Working) {
                 Row(Modifier.fillMaxWidth().padding(16.dp), horizontalArrangement = Arrangement.Center) {
                     CircularProgressIndicator()
@@ -255,9 +286,9 @@ fun SettingsScreen(
 private fun SectionTitle(text: String) {
     Text(
         text,
-        style = MaterialTheme.typography.titleSmall,
-        color = MaterialTheme.colorScheme.primary,
-        modifier = Modifier.padding(start = 16.dp, top = 24.dp, bottom = 8.dp),
+        style = MaterialTheme.typography.titleLarge,
+        color = MaterialTheme.colorScheme.onBackground,
+        modifier = Modifier.padding(start = 6.dp, top = 12.dp),
     )
 }
 

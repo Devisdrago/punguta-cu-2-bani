@@ -42,6 +42,15 @@ import ro.punguta.app.domain.recurring.RecurrenceRules
 import ro.punguta.app.ui.appViewModelFactory
 import ro.punguta.app.ui.components.EmptyState
 import ro.punguta.app.ui.components.LoadingState
+import ro.punguta.app.ui.components.AppCard
+import ro.punguta.app.ui.components.BadgeTone
+import ro.punguta.app.ui.components.CardRow
+import ro.punguta.app.ui.components.DetailTopBar
+import ro.punguta.app.ui.components.IconBadge
+import ro.punguta.app.ui.components.RoundIconButton
+import ro.punguta.app.ui.theme.tabular
+import androidx.compose.material.icons.outlined.EventRepeat
+import androidx.compose.material.icons.outlined.Repeat
 import ro.punguta.app.ui.components.formatDate
 import java.time.LocalDate
 
@@ -70,53 +79,59 @@ fun TemplatesScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text(stringResource(if (isIncome) R.string.recurring_incomes else R.string.recurring_expenses)) },
-                navigationIcon = {
-                    IconButton(onClick = onBack) { Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(R.string.back)) }
-                },
-            )
-        },
-        floatingActionButton = {
-            ExtendedFloatingActionButton(
-                onClick = onAdd,
-                icon = { Icon(Icons.Default.Add, null) },
-                text = { Text(stringResource(R.string.template_add)) },
-            )
+            DetailTopBar(stringResource(if (isIncome) R.string.recurring_incomes else R.string.recurring_expenses), onBack) {
+                RoundIconButton(Icons.Default.Add, stringResource(R.string.template_add), onAdd, filled = true)
+            }
         },
     ) { padding ->
         val list = templates
-        Column(Modifier.padding(padding)) {
+        Column(Modifier.padding(padding).padding(horizontal = 16.dp)) {
             Text(
                 stringResource(R.string.template_explainer),
-                style = MaterialTheme.typography.bodySmall,
+                style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                modifier = Modifier.padding(start = 4.dp, end = 4.dp, top = 8.dp, bottom = 12.dp),
             )
             when {
                 list == null -> LoadingState()
-                list.isEmpty() -> EmptyState(
-                    Icons.Default.EventRepeat,
-                    stringResource(R.string.templates_empty_title),
-                    stringResource(if (isIncome) R.string.templates_empty_income else R.string.templates_empty_expense),
-                )
-                else -> LazyColumn(contentPadding = PaddingValues(bottom = 88.dp)) {
-                    items(list, key = { it.id }) { t ->
-                        val next = RecurrenceRules.nextOccurrence(
-                            t.dayOfMonth, LocalDate.ofEpochDay(t.startDate), t.endDate?.let(LocalDate::ofEpochDay), today,
-                        )
-                        val status = when {
-                            t.endDate != null && t.endDate <= today.toEpochDay() -> stringResource(R.string.template_stopped)
-                            next != null -> stringResource(R.string.template_next, formatDate(next))
-                            else -> stringResource(R.string.template_stopped)
+                list.isEmpty() -> AppCard {
+                    EmptyState(
+                        Icons.Outlined.EventRepeat,
+                        stringResource(R.string.templates_empty_title),
+                        stringResource(if (isIncome) R.string.templates_empty_income else R.string.templates_empty_expense),
+                    )
+                }
+                else -> LazyColumn(contentPadding = PaddingValues(bottom = 24.dp)) {
+                    item {
+                        AppCard(contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp)) {
+                            list.forEach { t ->
+                                val next = RecurrenceRules.nextOccurrence(
+                                    t.dayOfMonth, LocalDate.ofEpochDay(t.startDate), t.endDate?.let(LocalDate::ofEpochDay), today,
+                                )
+                                val stopped = (t.endDate != null && t.endDate <= today.toEpochDay()) || next == null
+                                val status = if (stopped) {
+                                    stringResource(R.string.template_stopped)
+                                } else {
+                                    stringResource(R.string.template_next, formatDate(next!!))
+                                }
+                                CardRow(
+                                    title = t.name,
+                                    subtitle = stringResource(R.string.template_day, t.dayOfMonth) + " · " + status,
+                                    leading = {
+                                        IconBadge(
+                                            Icons.Outlined.Repeat,
+                                            when {
+                                                stopped -> BadgeTone.NEUTRAL
+                                                isIncome -> BadgeTone.INCOME
+                                                else -> BadgeTone.ACCENT
+                                            },
+                                        )
+                                    },
+                                    trailing = { Text(Money.format(t.amountBani), style = MaterialTheme.typography.titleSmall.tabular) },
+                                    onClick = { onEdit(t.id) },
+                                )
+                            }
                         }
-                        ListItem(
-                            headlineContent = { Text(t.name) },
-                            supportingContent = { Text(stringResource(R.string.template_day, t.dayOfMonth) + " · " + status) },
-                            trailingContent = { Text(Money.format(t.amountBani)) },
-                            modifier = Modifier.clickable { onEdit(t.id) },
-                        )
-                        HorizontalDivider()
                     }
                 }
             }

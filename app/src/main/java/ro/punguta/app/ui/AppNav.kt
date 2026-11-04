@@ -1,16 +1,14 @@
 package ro.punguta.app.ui
 
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Insights
-import androidx.compose.material.icons.filled.Payments
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.ShoppingCart
-import androidx.compose.material3.Icon
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material.icons.automirrored.outlined.ReceiptLong
+import androidx.compose.material.icons.outlined.AccountBalanceWallet
+import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -30,6 +28,8 @@ import ro.punguta.app.R
 import ro.punguta.app.data.db.TemplateKind
 import ro.punguta.app.ui.categories.CategoriesScreen
 import ro.punguta.app.ui.budgets.BudgetsScreen
+import ro.punguta.app.ui.components.FloatingNavBar
+import ro.punguta.app.ui.components.NavItem
 import ro.punguta.app.ui.dashboard.CategoryMonthScreen
 import ro.punguta.app.ui.dashboard.DashboardScreen
 import ro.punguta.app.ui.expenses.ExpenseEditScreen
@@ -67,10 +67,10 @@ object Routes {
 private data class Tab(val route: String, val label: Int, val icon: ImageVector)
 
 private val tabs = listOf(
-    Tab(Routes.DASHBOARD, R.string.tab_dashboard, Icons.Default.Insights),
-    Tab(Routes.INCOMES, R.string.tab_incomes, Icons.Default.Payments),
-    Tab(Routes.EXPENSES, R.string.tab_expenses, Icons.Default.ShoppingCart),
-    Tab(Routes.SETTINGS, R.string.tab_settings, Icons.Default.Settings),
+    Tab(Routes.DASHBOARD, R.string.tab_dashboard, Icons.Outlined.Home),
+    Tab(Routes.INCOMES, R.string.tab_incomes, Icons.Outlined.AccountBalanceWallet),
+    Tab(Routes.EXPENSES, R.string.tab_expenses, Icons.AutoMirrored.Outlined.ReceiptLong),
+    Tab(Routes.SETTINGS, R.string.tab_settings, Icons.Outlined.Settings),
 )
 
 @Composable
@@ -84,24 +84,22 @@ fun AppNav(nav: NavHostController = rememberNavController()) {
     val back: () -> Unit = { nav.popBackStack() }
 
     Scaffold(
+        containerColor = MaterialTheme.colorScheme.background,
+        // Each screen applies its own status-bar inset; the bar applies the navigation-bar inset.
+        contentWindowInsets = WindowInsets(0),
         bottomBar = {
             if (showBar) {
-                NavigationBar {
-                    tabs.forEach { tab ->
-                        NavigationBarItem(
-                            selected = currentRoute == tab.route,
-                            onClick = {
-                                nav.navigate(tab.route) {
-                                    popUpTo(nav.graph.findStartDestination().id) { saveState = true }
-                                    launchSingleTop = true
-                                    restoreState = true
-                                }
-                            },
-                            icon = { Icon(tab.icon, null) },
-                            label = { Text(stringResource(tab.label)) },
-                        )
-                    }
-                }
+                FloatingNavBar(
+                    items = tabs.map { NavItem(stringResource(it.label), it.icon) },
+                    selected = tabs.indexOfFirst { it.route == currentRoute },
+                    onSelect = { index ->
+                        nav.navigate(tabs[index].route) {
+                            popUpTo(nav.graph.findStartDestination().id) { saveState = true }
+                            launchSingleTop = true
+                            restoreState = true
+                        }
+                    },
+                )
             }
         },
     ) { padding ->
@@ -111,6 +109,8 @@ fun AppNav(nav: NavHostController = rememberNavController()) {
                     monthVm = monthVm,
                     onCategory = { nav.navigate(Routes.categoryMonth(it, selectedMonth.toString())) },
                     onBudgets = { nav.navigate(Routes.BUDGETS) },
+                    onAddExpense = { nav.navigate(Routes.expenseEdit()) },
+                    onScan = { nav.navigate(Routes.SCAN) },
                 )
             }
             composable(

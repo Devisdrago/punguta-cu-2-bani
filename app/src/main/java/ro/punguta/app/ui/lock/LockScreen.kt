@@ -33,6 +33,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.FragmentActivity
 import ro.punguta.app.R
+import ro.punguta.app.ui.components.BadgeTone
+import ro.punguta.app.ui.components.IconBadge
+import ro.punguta.app.ui.components.PillButton
+import ro.punguta.app.ui.components.PillKind
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.material.icons.outlined.Fingerprint
+import androidx.compose.material.icons.outlined.Lock
 import ro.punguta.app.security.AppLock
 import ro.punguta.app.security.AuthAvailability
 import ro.punguta.app.security.Biometrics
@@ -70,27 +79,45 @@ fun LockScreen(lock: AppLock, onDisableLock: () -> Unit) {
         Modifier.fillMaxSize()
             // Swallow every touch so nothing underneath can be used.
             .clickable(interactionSource = remember { MutableInteractionSource() }, indication = null) {},
+        color = MaterialTheme.colorScheme.background,
     ) {
         Column(
-            Modifier.fillMaxSize().padding(32.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterVertically),
+            Modifier.fillMaxSize().windowInsetsPadding(WindowInsets.systemBars).padding(horizontal = 20.dp, vertical = 24.dp),
         ) {
-            Icon(Icons.Default.Lock, null, Modifier.size(64.dp), tint = MaterialTheme.colorScheme.primary)
-            Text(stringResource(R.string.app_name), style = MaterialTheme.typography.headlineSmall)
+            Text(
+                stringResource(R.string.app_name),
+                style = MaterialTheme.typography.displaySmall,
+                modifier = Modifier.padding(top = 24.dp),
+            )
+            Text(
+                stringResource(if (availability == AuthAvailability.AVAILABLE) R.string.lock_locked else R.string.lock_unavailable),
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(top = 8.dp),
+            )
+            Column(
+                Modifier.weight(1f).fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
+            ) {
+                IconBadge(
+                    if (availability == AuthAvailability.AVAILABLE) Icons.Outlined.Fingerprint else Icons.Outlined.Lock,
+                    if (availability == AuthAvailability.AVAILABLE) BadgeTone.ACCENT else BadgeTone.NEUTRAL,
+                    size = 96.dp,
+                )
+                message?.let {
+                    Text(
+                        stringResource(it),
+                        color = MaterialTheme.colorScheme.error,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(top = 20.dp),
+                    )
+                }
+            }
             if (availability == AuthAvailability.AVAILABLE) {
-                Text(stringResource(R.string.lock_locked), textAlign = TextAlign.Center)
-                message?.let { Text(stringResource(it), color = MaterialTheme.colorScheme.error, textAlign = TextAlign.Center) }
-                Button(onClick = prompt, modifier = Modifier.fillMaxWidth()) {
-                    Icon(Icons.Default.Fingerprint, null)
-                    Text(stringResource(R.string.lock_unlock), Modifier.padding(start = 8.dp))
-                }
+                PillButton(stringResource(R.string.lock_unlock), prompt, icon = Icons.Outlined.Fingerprint)
             } else {
-                // The phone's screen lock was removed after enabling the app lock.
-                Text(stringResource(R.string.lock_unavailable), textAlign = TextAlign.Center)
-                OutlinedButton(onClick = onDisableLock, modifier = Modifier.fillMaxWidth()) {
-                    Text(stringResource(R.string.lock_disable_continue))
-                }
+                PillButton(stringResource(R.string.lock_disable_continue), onDisableLock, kind = PillKind.SECONDARY)
             }
         }
     }

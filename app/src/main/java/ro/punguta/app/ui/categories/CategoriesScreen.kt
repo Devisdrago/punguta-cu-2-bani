@@ -58,6 +58,15 @@ import ro.punguta.app.data.repo.CategoryNameException
 import ro.punguta.app.data.repo.CategoryRepository
 import ro.punguta.app.ui.appViewModelFactory
 import ro.punguta.app.ui.components.LoadingState
+import ro.punguta.app.ui.components.AppCard
+import ro.punguta.app.ui.components.CardRow
+import ro.punguta.app.ui.components.DetailTopBar
+import ro.punguta.app.ui.components.RoundIconButton
+import ro.punguta.app.ui.dashboard.ColorDot
+import ro.punguta.app.ui.dashboard.categoryColor
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material.icons.outlined.Edit
 
 sealed interface CategoryDialog {
     data object Add : CategoryDialog
@@ -144,17 +153,9 @@ fun CategoriesScreen(onBack: () -> Unit, vm: CategoriesViewModel = viewModel(fac
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text(stringResource(R.string.categories)) },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(R.string.back))
-                    }
-                },
-            )
-        },
-        floatingActionButton = {
-            FloatingActionButton(onClick = vm::showAdd) { Icon(Icons.Default.Add, stringResource(R.string.category_add)) }
+            DetailTopBar(stringResource(R.string.categories), onBack) {
+                RoundIconButton(Icons.Default.Add, stringResource(R.string.category_add), vm::showAdd, filled = true)
+            }
         },
         snackbarHost = { SnackbarHost(snackbar) },
     ) { padding ->
@@ -162,23 +163,27 @@ fun CategoriesScreen(onBack: () -> Unit, vm: CategoriesViewModel = viewModel(fac
         if (list == null) {
             LoadingState(Modifier.padding(padding))
         } else {
-            LazyColumn(Modifier.padding(padding)) {
-                items(list, key = { it.id }) { category ->
-                    ListItem(
-                        headlineContent = { Text(category.name) },
-                        trailingContent = {
-                            Row {
-                                IconButton(onClick = { vm.showRename(category) }) {
-                                    Icon(Icons.Default.Edit, stringResource(R.string.rename))
-                                }
-                                IconButton(onClick = { vm.showDelete(category) }) {
-                                    Icon(Icons.Default.Delete, stringResource(R.string.delete))
-                                }
-                            }
-                        },
-                        modifier = Modifier.clickable { vm.showRename(category) },
-                    )
-                    HorizontalDivider()
+            LazyColumn(Modifier.padding(padding), contentPadding = PaddingValues(16.dp)) {
+                item {
+                    AppCard(contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp)) {
+                        list.forEachIndexed { index, category ->
+                            CardRow(
+                                title = category.name,
+                                leading = { ColorDot(categoryColor(index)) },
+                                trailing = {
+                                    Row {
+                                        IconButton(onClick = { vm.showRename(category) }) {
+                                            Icon(Icons.Outlined.Edit, stringResource(R.string.rename))
+                                        }
+                                        IconButton(onClick = { vm.showDelete(category) }) {
+                                            Icon(Icons.Outlined.Delete, stringResource(R.string.delete))
+                                        }
+                                    }
+                                },
+                                onClick = { vm.showRename(category) },
+                            )
+                        }
+                    }
                 }
             }
         }

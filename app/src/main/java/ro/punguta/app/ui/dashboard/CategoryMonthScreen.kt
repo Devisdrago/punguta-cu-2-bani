@@ -37,6 +37,13 @@ import ro.punguta.app.domain.money.Money
 import ro.punguta.app.ui.appViewModelFactory
 import ro.punguta.app.ui.components.EmptyState
 import ro.punguta.app.ui.components.LoadingState
+import ro.punguta.app.ui.components.AppCard
+import ro.punguta.app.ui.components.CardRow
+import ro.punguta.app.ui.components.DetailTopBar
+import ro.punguta.app.ui.theme.tabular
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.ui.unit.dp
+import androidx.compose.material.icons.outlined.ShoppingBag
 import ro.punguta.app.ui.components.formatEpochDay
 import ro.punguta.app.ui.components.formatMonth
 import java.time.YearMonth
@@ -70,46 +77,49 @@ fun CategoryMonthScreen(
     val data by vm.data.collectAsStateWithLifecycle()
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = {
-                    Text(data?.let { "${it.title} · ${formatMonth(it.month)}" }.orEmpty())
-                },
-                navigationIcon = {
-                    IconButton(onClick = onBack) { Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(R.string.back)) }
-                },
-            )
+            DetailTopBar(data?.let { "${it.title} · ${formatMonth(it.month)}" }.orEmpty(), onBack)
         },
     ) { padding ->
         val d = data
         when {
             d == null -> LoadingState(Modifier.padding(padding))
             d.items.isEmpty() -> EmptyState(
-                Icons.Default.ShoppingCart,
+                Icons.Outlined.ShoppingBag,
                 stringResource(R.string.category_month_empty),
                 "",
                 Modifier.padding(padding),
             )
-            else -> LazyColumn(Modifier.padding(padding)) {
+            else -> LazyColumn(
+                Modifier.padding(padding),
+                contentPadding = PaddingValues(16.dp),
+                verticalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(12.dp),
+            ) {
                 item {
-                    ListItem(
-                        headlineContent = { Text(stringResource(R.string.total)) },
-                        trailingContent = {
-                            Text(
-                                Money.format(d.items.sumOf { it.item.amountBani }),
-                                style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.Bold,
-                            )
-                        },
-                    )
-                    HorizontalDivider()
+                    AppCard {
+                        CardRow(
+                            title = stringResource(R.string.total),
+                            trailing = {
+                                Text(
+                                    Money.format(d.items.sumOf { it.item.amountBani }),
+                                    style = MaterialTheme.typography.titleLarge.tabular,
+                                )
+                            },
+                        )
+                    }
                 }
-                items(d.items, key = { it.item.id }) { row ->
-                    ListItem(
-                        headlineContent = { Text(row.item.name) },
-                        supportingContent = { Text("${row.title} · ${formatEpochDay(row.date)}") },
-                        trailingContent = { Text(Money.format(row.item.amountBani)) },
-                        modifier = Modifier.clickable { onExpense(row.item.expenseId) },
-                    )
+                item {
+                    AppCard(contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp)) {
+                        d.items.forEach { row ->
+                            CardRow(
+                                title = row.item.name,
+                                subtitle = "${row.title} · ${formatEpochDay(row.date)}",
+                                trailing = {
+                                    Text(Money.format(row.item.amountBani), style = MaterialTheme.typography.titleSmall.tabular)
+                                },
+                                onClick = { onExpense(row.item.expenseId) },
+                            )
+                        }
+                    }
                 }
             }
         }

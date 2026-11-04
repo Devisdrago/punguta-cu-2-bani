@@ -47,6 +47,12 @@ import ro.punguta.app.ui.components.AmountField
 import ro.punguta.app.ui.components.ConfirmDialog
 import ro.punguta.app.ui.components.DateField
 import ro.punguta.app.ui.components.LoadingState
+import ro.punguta.app.ui.components.highlightColors
+import ro.punguta.app.ui.components.DetailTopBar
+import ro.punguta.app.ui.components.PillButton
+import ro.punguta.app.ui.components.PillKind
+import ro.punguta.app.ui.components.RoundIconButton
+import androidx.compose.material.icons.outlined.Delete
 import java.time.LocalDate
 import java.time.YearMonth
 
@@ -130,19 +136,11 @@ fun IncomeEditScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text(stringResource(if (form.id == 0L) R.string.income_add else R.string.income_edit)) },
-                navigationIcon = {
-                    IconButton(onClick = onDone) { Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(R.string.back)) }
-                },
-                actions = {
-                    if (form.id != 0L) {
-                        IconButton(onClick = { confirmDelete = true }) {
-                            Icon(Icons.Default.Delete, stringResource(R.string.delete))
-                        }
-                    }
-                },
-            )
+            DetailTopBar(stringResource(if (form.id == 0L) R.string.income_add else R.string.income_edit), onDone) {
+                if (form.id != 0L) {
+                    RoundIconButton(Icons.Outlined.Delete, stringResource(R.string.delete), { confirmDelete = true })
+                }
+            }
         },
     ) { padding ->
         if (!form.loaded) {
@@ -161,6 +159,7 @@ fun IncomeEditScreen(
                 )
             }
             OutlinedTextField(
+                colors = highlightColors(false),
                 value = form.name,
                 onValueChange = { v -> vm.update { it.copy(name = v) } },
                 label = { Text(stringResource(R.string.income_name)) },
@@ -186,12 +185,13 @@ fun IncomeEditScreen(
                 modifier = Modifier.fillMaxWidth(),
             )
             OutlinedTextField(
+                colors = highlightColors(false),
                 value = form.note,
                 onValueChange = { v -> vm.update { it.copy(note = v) } },
                 label = { Text(stringResource(R.string.note_optional)) },
                 modifier = Modifier.fillMaxWidth(),
             )
-            Button(onClick = vm::save, modifier = Modifier.fillMaxWidth()) { Text(stringResource(R.string.save)) }
+            PillButton(stringResource(R.string.save), vm::save, modifier = Modifier.padding(top = 8.dp))
         }
     }
 

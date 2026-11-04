@@ -73,6 +73,11 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import ro.punguta.app.PungutaApp
 import ro.punguta.app.R
+import ro.punguta.app.ui.components.DetailTopBar
+import ro.punguta.app.ui.components.PillButton
+import ro.punguta.app.ui.components.PillKind
+import ro.punguta.app.ui.components.RoundIconButton
+import androidx.compose.material.icons.outlined.PhotoLibrary
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -114,19 +119,9 @@ fun ScanScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text(stringResource(R.string.receipt_scan)) },
-                navigationIcon = {
-                    IconButton(onClick = onBack) { Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(R.string.back)) }
-                },
-                actions = {
-                    TextButton(onClick = pickImage) {
-                        Icon(Icons.Default.PhotoLibrary, null)
-                        Spacer(Modifier.width(4.dp))
-                        Text(stringResource(R.string.scan_gallery))
-                    }
-                },
-            )
+            DetailTopBar(stringResource(R.string.receipt_scan), onBack) {
+                RoundIconButton(Icons.Outlined.PhotoLibrary, stringResource(R.string.scan_gallery), pickImage)
+            }
         },
     ) { padding ->
         Box(Modifier.padding(padding).fillMaxSize()) {
@@ -274,8 +269,8 @@ private fun Failure(error: ScanError, onRetry: () -> Unit, onGallery: () -> Unit
     ) {
         Icon(Icons.Default.NoPhotography, null, Modifier.size(48.dp), tint = MaterialTheme.colorScheme.error)
         Text(message, textAlign = TextAlign.Center)
-        Button(onClick = onRetry, modifier = Modifier.fillMaxWidth()) { Text(stringResource(R.string.scan_retry)) }
-        OutlinedButton(onClick = onGallery, modifier = Modifier.fillMaxWidth()) { Text(stringResource(R.string.scan_gallery)) }
+        PillButton(stringResource(R.string.scan_retry), onRetry)
+        PillButton(stringResource(R.string.scan_gallery), onGallery, kind = PillKind.SECONDARY)
         TextButton(onClick = onManual) { Text(stringResource(R.string.scan_manual)) }
     }
 }
@@ -296,9 +291,9 @@ private fun NoCamera(
         Icon(Icons.Default.NoPhotography, null, Modifier.size(48.dp), tint = MaterialTheme.colorScheme.outline)
         Text(message, textAlign = TextAlign.Center)
         if (primaryLabel != null) {
-            Button(onClick = onPrimary, modifier = Modifier.fillMaxWidth()) { Text(primaryLabel) }
+            PillButton(primaryLabel, onPrimary)
         }
-        OutlinedButton(onClick = onGallery, modifier = Modifier.fillMaxWidth()) { Text(stringResource(R.string.scan_gallery)) }
+        PillButton(stringResource(R.string.scan_gallery), onGallery, kind = PillKind.SECONDARY)
         TextButton(onClick = onManual) { Text(stringResource(R.string.scan_manual)) }
     }
 }
